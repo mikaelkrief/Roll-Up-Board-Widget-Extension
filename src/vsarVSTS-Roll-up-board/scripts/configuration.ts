@@ -17,14 +17,20 @@ import RestClient = require("TFS/Work/RestClient");
 import CoreClient = require("TFS/Core/RestClient");
 import CoreContracts = require("TFS/Core/Contracts");
 import WorkContracts = require("TFS/Work/Contracts");
+import WorkItemTrackingClient = require("TFS/WorkItemTracking/RestClient");
+import WorkItemTrackingContracts = require("TFS/WorkItemTracking/Contracts");
 import Q = require("q");
 import Context = require("VSS/Context")
+import Helpers = require("Scripts/Helpers");
+
 
 export class Configuration {
     widgetConfigurationContext = null;
 
     $select = $('#board-dropdown');
     public client = RestClient.getClient();
+    public clientwiTracking = WorkItemTrackingClient.getClient();
+
     public _widgetHelpers;
     constructor(public WidgetHelpers) {
     }
@@ -67,6 +73,12 @@ export class Configuration {
                 $queryDropdown.appendChild(opt);
             });
 
+            this.PopulateAreaPath().then((classificationNodesAreas) => {
+
+               var data = Helpers.Helpers.WrapperAreaPath(classificationNodesAreas);
+
+            });
+ 
 
             _that.$select
                 .change(() => {
@@ -107,6 +119,18 @@ export class Configuration {
             deferred.resolve(boards);
         });
         return deferred.promise;
+    }
+
+    public PopulateAreaPath(): IPromise<WorkItemTrackingContracts.WorkItemClassificationNode> {
+        //Helpers.Helpers.WrapperAreaPath();
+        var deferred = Q.defer<WorkItemTrackingContracts.WorkItemClassificationNode>();
+
+        this.clientwiTracking.getClassificationNode(VSS.getWebContext().project.id, WorkItemTrackingContracts.TreeStructureGroup.Areas).then((areas) => {
+            deferred.resolve(areas);
+        });
+
+        return deferred.promise;
+        
     }
 
     public GetProjectTemplate(): IPromise<string> {

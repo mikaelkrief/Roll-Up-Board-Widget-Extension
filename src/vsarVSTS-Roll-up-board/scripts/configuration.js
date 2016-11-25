@@ -9,16 +9,17 @@
 // <summary>
 // </summary>
 //---------------------------------------------------------------------
-/// <reference path='isettings.d.ts' />
-/// <reference path='../typings/tsd.d.ts' />
-"use strict";
-define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "q", "VSS/Context"], function (require, exports, RestClient, CoreClient, Q, Context) {
+define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "TFS/WorkItemTracking/RestClient", "TFS/WorkItemTracking/Contracts", "q", "VSS/Context", "Scripts/Helpers"], function (require, exports, RestClient, CoreClient, WorkItemTrackingClient, WorkItemTrackingContracts, Q, Context, Helpers) {
+    /// <reference path='isettings.d.ts' />
+    /// <reference path='../typings/tsd.d.ts' />
+    "use strict";
     var Configuration = (function () {
         function Configuration(WidgetHelpers) {
             this.WidgetHelpers = WidgetHelpers;
             this.widgetConfigurationContext = null;
             this.$select = $('#board-dropdown');
             this.client = RestClient.getClient();
+            this.clientwiTracking = WorkItemTrackingClient.getClient();
         }
         Configuration.prototype.IsVSTS = function () {
             return Context.getPageContext().webAccessConfiguration.isHosted;
@@ -27,6 +28,7 @@ define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "q",
             return this.IsVSTS();
         };
         Configuration.prototype.load = function (widgetSettings, widgetConfigurationContext) {
+            var _this = this;
             if (this.EnableAppInsightTelemetry()) {
                 TelemetryClient.getClient().trackPageView("RollUpBoard.Configuration");
             }
@@ -48,6 +50,9 @@ define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "q",
                     var optText = document.createTextNode(board.name);
                     opt.appendChild(optText);
                     $queryDropdown.appendChild(opt);
+                });
+                _this.PopulateAreaPath().then(function (classificationNodesAreas) {
+                    var data = Helpers.Helpers.WrapperAreaPath(classificationNodesAreas);
                 });
                 _that.$select
                     .change(function () {
@@ -76,6 +81,14 @@ define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "q",
             });
             return deferred.promise;
         };
+        Configuration.prototype.PopulateAreaPath = function () {
+            //Helpers.Helpers.WrapperAreaPath();
+            var deferred = Q.defer();
+            this.clientwiTracking.getClassificationNode(VSS.getWebContext().project.id, WorkItemTrackingContracts.TreeStructureGroup.Areas).then(function (areas) {
+                deferred.resolve(areas);
+            });
+            return deferred.promise;
+        };
         Configuration.prototype.GetProjectTemplate = function () {
             var deferred = Q.defer();
             var client = CoreClient.getClient();
@@ -95,7 +108,7 @@ define(["require", "exports", "TFS/Work/RestClient", "TFS/Core/RestClient", "q",
             return this.WidgetHelpers.WidgetConfigurationSave.Valid(this.getCustomSettings());
         };
         return Configuration;
-    })();
+    }());
     exports.Configuration = Configuration;
     VSS.require(["TFS/Dashboards/WidgetHelpers"], function (WidgetHelpers) {
         WidgetHelpers.IncludeWidgetConfigurationStyles();

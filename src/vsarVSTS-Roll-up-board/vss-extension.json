@@ -1,11 +1,11 @@
 {
   "manifestVersion": 1,
-  "id": "",
-  "version": "",
-  "name": "",
+  "id": "RollUpBoard",
+  "version": "1.15.4",
+  "name": "RollUp Board Widget Test",
   "scopes": [ "vso.work" ],
   "description": "The widget shows the number of cards in each column of the Kanban board.",
-  "publisher": "",
+  "publisher": "DevMikaelKrief",
   "icons": {
     "default": "img/logo.png"
   },
