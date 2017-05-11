@@ -10,7 +10,7 @@
 // </summary>
 // ---------------------------------------------------------------------
 
- /// <reference types="vss-web-extension-sdk" />
+/// <reference types="vss-web-extension-sdk" />
 "use strict";
 import Context = require("VSS/Context");
 import RestClient = require("TFS/Work/RestClient");
@@ -24,11 +24,10 @@ import Board = require("./RollUpBoard");
 import * as tc from "./TelemetryClient";
 import telemetryClientSettings = require("./telemetryClientSettings");
 
-var LaunchDarkly = require('ldclient-node');
-
 export class WidgetRollUpBoard {
 
-    constructor(public WidgetHelpers) {
+    constructor(public WidgetHelpers, public Ldclient) {
+        this.ldclient = Ldclient;
     }
 
     public client = RestClient.getClient();
@@ -38,32 +37,31 @@ export class WidgetRollUpBoard {
     public boardColumnField: string = "";
     public boardDoneField: string = "";
     public boardRowField: string = "";
+    public ldclient;
 
     IsVSTS(): boolean {
         return Context.getPageContext().webAccessConfiguration.isHosted;
     }
 
     EnableAppInsightTelemetry(): boolean {
-        let ldclient = LaunchDarkly.init("sdk-59baef5c-3851-4fef-a6a6-05a6e9c38ea9");
+        let webContext = VSS.getWebContext();
+        let enableTelemetry = false;
 
-ldclient.once('ready', function() {
-    var webContext = VSS.getWebContext();
-    var enableTelemetry = false;
-    ldclient.variation("enable-telemetry", {"key": webContext.user.email}, false,
-     function(err, showFeature) {
-        if (showFeature) {
-          // application code to show the feature
-          enableTelemetry = true;
-        } else {
-          // the code to run if the feature is off
-          enableTelemetry =  false;
-        }
-     });
-     return enableTelemetry;
-});
+        this.ldclient.once("ready", function () {
 
+            this.ldclient.variation("enable-telemetry", { "key": webContext.user.email }, false,
+                function (err, showFeature) {
+                    if (showFeature) {
+                        // application code to show the feature
+                        enableTelemetry = true;
+                    } else {
+                        // the code to run if the feature is off
+                        enableTelemetry = false;
+                    }
+                });
+        });
 
-        
+        return enableTelemetry;
     }
 
     public LoadRollUp(widgetSettings) {
@@ -582,7 +580,7 @@ ldclient.once('ready', function() {
             }
         }, function (reject) {
             if (this.EnableAppInsightTelemetry()) {
-               tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.GetNbWIForColumnAndRow");
+                tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.GetNbWIForColumnAndRow");
             } else {
                 console.log("App Insight Telemetry is disabled");
             }
@@ -658,12 +656,3 @@ ldclient.once('ready', function() {
         return this.LoadRollUp(widgetSettings);
     }
 }
-
-VSS.require("TFS/Dashboards/WidgetHelpers", function (WidgetHelpers) {
-    WidgetHelpers.IncludeWidgetStyles();
-    VSS.register("rollupboardwidget", () => {
-        let rollupboard = new WidgetRollUpBoard(WidgetHelpers);
-        return rollupboard;
-    });
-    VSS.notifyLoadSucceeded();
-});

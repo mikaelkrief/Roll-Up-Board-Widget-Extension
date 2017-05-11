@@ -51,6 +51,8 @@
 
     <script src="../lib/VSS.SDK.min.js"></script>
     <script src="../lib/ai.0.js"></script>
+    <script src="https://app.launchdarkly.com/snippet/ldclient.min.js"></script>
+
     <script type="text/javascript">
         // Initialize the VSS sdk
         VSS.init({
@@ -63,7 +65,16 @@
 
         // Wait for the SDK to be initialized
         VSS.ready(function () {
-            VSS.require(["../dist/WidgetRollUpBoard"], function (app) { });
+
+            VSS.require(["../dist/WidgetRollUpBoard","TFS/Dashboards/WidgetHelpers"], function (app,WidgetHelpers) {
+                let ldclient = LDClient.initialize("sdk-59baef5c-3851-4fef-a6a6-05a6e9c38ea9");
+                    WidgetHelpers.IncludeWidgetStyles();
+                    VSS.register("rollupboardwidget", () => {
+                        let rollupboard = new WidgetRollUpBoard(WidgetHelpers,ldclient);
+                        return rollupboard;
+                    });
+                    VSS.notifyLoadSucceeded();
+            });
         });
     </script>
 
