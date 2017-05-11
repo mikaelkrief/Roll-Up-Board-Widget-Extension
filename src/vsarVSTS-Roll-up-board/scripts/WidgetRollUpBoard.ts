@@ -30,7 +30,7 @@ export class WidgetRollUpBoard {
         this.ldclient = Ldclient;
     }*/
     constructor(public WidgetHelpers) {
-        //this.ldclient = Ldclient;
+        // this.ldclient = Ldclient;
     }
 
     public client = RestClient.getClient();
