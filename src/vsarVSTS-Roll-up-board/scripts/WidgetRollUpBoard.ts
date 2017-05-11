@@ -29,8 +29,8 @@ export class WidgetRollUpBoard {
     /*constructor(public WidgetHelpers, public Ldclient) {
         this.ldclient = Ldclient;
     }*/
-    constructor(public WidgetHelpers) {
-        // this.ldclient = Ldclient;
+    constructor(public WidgetHelpers, public Ldclient) {
+        this.ldclient = Ldclient;
     }
 
     public client = RestClient.getClient();
@@ -50,7 +50,7 @@ export class WidgetRollUpBoard {
         let webContext = VSS.getWebContext();
         let enableTelemetry = false;
 
-        /*this.ldclient.once("ready", function () {
+        this.ldclient.once("ready", function () {
 
             this.ldclient.variation("enable-telemetry", { "key": webContext.user.email }, false,
                 function (err, showFeature) {
@@ -62,7 +62,7 @@ export class WidgetRollUpBoard {
                         enableTelemetry = false;
                     }
                 });
-        });*/
+        });
 
         return enableTelemetry;
     }
