@@ -52,7 +52,7 @@ export class WidgetRollUpBoard {
 
         this.ldclient.once("ready", function () {
 
-            this.ldclient.variation("enable-telemetry", { "key": "" + webContext.user.email + "" }, false,
+            this.ldclient.variation("enable-telemetry", { "key": "krief_mikael@hotmail.com" }, false,
                 function (err, showFeature) {
                     if (showFeature) {
                         // application code to show the feature
