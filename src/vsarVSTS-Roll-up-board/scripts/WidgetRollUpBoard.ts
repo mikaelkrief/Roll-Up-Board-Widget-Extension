@@ -24,6 +24,8 @@ import Board = require("./RollUpBoard");
 import * as tc from "./TelemetryClient";
 import telemetryClientSettings = require("./telemetryClientSettings");
 
+var LaunchDarkly = require('ldclient-node');
+
 export class WidgetRollUpBoard {
 
     constructor(public WidgetHelpers) {
@@ -42,7 +44,26 @@ export class WidgetRollUpBoard {
     }
 
     EnableAppInsightTelemetry(): boolean {
-        return true;
+        let ldclient = LaunchDarkly.init("sdk-59baef5c-3851-4fef-a6a6-05a6e9c38ea9");
+
+ldclient.once('ready', function() {
+    var webContext = VSS.getWebContext();
+    var enableTelemetry = false;
+    ldclient.variation("enable-telemetry", {"key": webContext.user.email}, false,
+     function(err, showFeature) {
+        if (showFeature) {
+          // application code to show the feature
+          enableTelemetry = true;
+        } else {
+          // the code to run if the feature is off
+          enableTelemetry =  false;
+        }
+     });
+     return enableTelemetry;
+});
+
+
+        
     }
 
     public LoadRollUp(widgetSettings) {
