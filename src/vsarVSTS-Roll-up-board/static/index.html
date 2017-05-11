@@ -67,7 +67,7 @@
         VSS.ready(function () {
 
             VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers"], function (app, WidgetHelpers) {
-                let ldclient = LDClient.initialize("sdk-59baef5c-3851-4fef-a6a6-05a6e9c38ea9");
+                let ldclient = LDClient.initialize("590348c958ed570a3af8a496");
                 WidgetHelpers.IncludeWidgetStyles();
                 VSS.register("rollupboardwidget", () => {
                     let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ldclient);
