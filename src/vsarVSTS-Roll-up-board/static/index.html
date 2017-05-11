@@ -70,7 +70,7 @@
                 //let ldclient = LDClient.initialize("sdk-59baef5c-3851-4fef-a6a6-05a6e9c38ea9");
                     WidgetHelpers.IncludeWidgetStyles();
                     VSS.register("rollupboardwidget", () => {
-                        let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers,ldclient);
+                        let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers);
                         return rollupboard;
                     });
                     VSS.notifyLoadSucceeded();

@@ -26,8 +26,11 @@ import telemetryClientSettings = require("./telemetryClientSettings");
 
 export class WidgetRollUpBoard {
 
-    constructor(public WidgetHelpers, public Ldclient) {
+    /*constructor(public WidgetHelpers, public Ldclient) {
         this.ldclient = Ldclient;
+    }*/
+    constructor(public WidgetHelpers) {
+        //this.ldclient = Ldclient;
     }
 
     public client = RestClient.getClient();
