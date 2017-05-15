@@ -5,8 +5,9 @@ module.exports = {
     target: "web",
     entry: {
         WidgetRollUpBoard: "./scripts/WidgetRollUpBoard.ts",
-        configuration : "./scripts/configuration.ts",
-        rollupboard : "./scripts/RollUpBoard.ts",
+        configuration: "./scripts/configuration.ts",
+        rollupboard: "./scripts/RollUpBoard.ts",
+        featureFlagsSettings: "./scripts/FeatureFlagsSettings.ts"
     },
     output: {
         filename: "[name].js",

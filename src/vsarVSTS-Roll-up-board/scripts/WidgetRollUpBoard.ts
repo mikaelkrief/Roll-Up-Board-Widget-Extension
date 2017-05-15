@@ -24,14 +24,9 @@ import Board = require("./RollUpBoard");
 import * as tc from "./TelemetryClient";
 import telemetryClientSettings = require("./telemetryClientSettings");
 
-export class WidgetRollUpBoard {
+import * as ff from "./FeatureFlagsSettings";
 
-    /*constructor(public WidgetHelpers, public Ldclient) {
-        this.ldclient = Ldclient;
-    }*/
-    constructor(public WidgetHelpers, public Ldclient) {
-        this.ldclient = Ldclient;
-    }
+export class WidgetRollUpBoard {
 
     public client = RestClient.getClient();
     public clientwi = RestClientWI.getClient();
@@ -40,31 +35,27 @@ export class WidgetRollUpBoard {
     public boardColumnField: string = "";
     public boardDoneField: string = "";
     public boardRowField: string = "";
-    public ldclient;
+    public enableTelemetry = false;
+    public displayLogs = false;
+
+    constructor(public WidgetHelpers, public featureFlagsSettings) {
+        this.enableTelemetry = featureFlagsSettings.enabletelemetry;
+        this.displayLogs = featureFlagsSettings.displayLogs;
+    }
 
     IsVSTS(): boolean {
         return Context.getPageContext().webAccessConfiguration.isHosted;
     }
 
     EnableAppInsightTelemetry(): boolean {
-        let webContext = VSS.getWebContext();
-        let enableTelemetry = false;
+        // console.log("enableTelemetry2: " + this.enableTelemetry);
+        return this.enableTelemetry;
+    }
 
-        this.ldclient.once("ready", function () {
-
-            this.ldclient.variation("enable-telemetry", { "key": "" + webContext.user.email + "" }, false,
-                function (err, showFeature) {
-                    if (showFeature) {
-                        // application code to show the feature
-                        enableTelemetry = true;
-                    } else {
-                        // the code to run if the feature is off
-                        enableTelemetry = false;
-                    }
-                });
-        });
-
-        return enableTelemetry;
+    DisplayLog(message: string) {
+        if (this.displayLogs) {
+            console.log(message);
+        }
     }
 
     public LoadRollUp(widgetSettings) {
@@ -552,13 +543,13 @@ export class WidgetRollUpBoard {
         // total wi
         this.clientwi.queryByWiql(wiql, this.currentTeamContext.project, this.currentTeamContext.team).then((result) => {
             nbWi.push(result.workItems.length.toString());
-            console.log("1: " + wiql.query);
+            this.DisplayLog("1: " + wiql.query);
             if (isSplit) {
                 // old : System.BoardColumnDone
                 wiql.query = queryWhere.concat(" AND [" + this.boardDoneField + "] = False");
 
                 this.clientwi.queryByWiql(wiql, this.currentTeamContext.project, this.currentTeamContext.team).then((result1) => {
-                    console.log("2: " + wiql.query);
+                    this.DisplayLog("2: " + wiql.query);
                     nbWi.push(result1.workItems.length.toString());
                     // old : System.BoardColumnDone
                     wiql.query = queryWhere.concat(" AND [" + this.boardDoneField + "] = True");
@@ -566,7 +557,7 @@ export class WidgetRollUpBoard {
                     this.clientwi.queryByWiql(wiql, this.currentTeamContext.project, this.currentTeamContext.team).then((result2) => {
                         nbWi.push(result2.workItems.length.toString());
 
-                        console.log("3: " + wiql.query); // SHOW DEBUG
+                        this.DisplayLog("3: " + wiql.query); // SHOW DEBUG
                         deferred.resolve(nbWi);
                     }, function (reject) {
                         if (this.EnableAppInsightTelemetry()) {
