@@ -64,18 +64,17 @@
 
         // Wait for the SDK to be initialized
         VSS.ready(function () {
-            VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers","../dist/FeatureFlagsSettings"], function (app, WidgetHelpers,ff) {
-                
+            VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (app, WidgetHelpers, ff) {
+
                 let webContext = VSS.getWebContext();
-                var featureFlag = new ff.FeatureFlagsSettings();
-                var ldclient = featureFlag.init( { "key": "" + webContext.user.email + "" },LDClient);
-                ldclient.on("ready", function () {
-                    
-                    featureFlag.GetAllFlags(ldclient);
-                   
-                    WidgetHelpers.IncludeWidgetStyles();
+
+                WidgetHelpers.IncludeWidgetStyles();
+
+                var ldclientServices = new ff.LaunchDarklyService({ "key": "" + webContext.user.email + "" });
+                ldclientServices.ldClient.on("ready", function () {
                     VSS.register("rollupboardwidget", () => {
-                        let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, featureFlag);
+                        ldclientServices.GetAllFlags();
+                        let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ldclientServices);
                         return rollupboard;
                     });
                     VSS.notifyLoadSucceeded();
@@ -83,8 +82,6 @@
             });
         });
     </script>
-
-
 </body>
 
 </html>

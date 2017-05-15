@@ -24,8 +24,6 @@ import Board = require("./RollUpBoard");
 import * as tc from "./TelemetryClient";
 import telemetryClientSettings = require("./telemetryClientSettings");
 
-import * as ff from "./FeatureFlagsSettings";
-
 export class WidgetRollUpBoard {
 
     public client = RestClient.getClient();

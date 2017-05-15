@@ -7,7 +7,7 @@ module.exports = {
         WidgetRollUpBoard: "./scripts/WidgetRollUpBoard.ts",
         configuration: "./scripts/configuration.ts",
         rollupboard: "./scripts/RollUpBoard.ts",
-        featureFlagsSettings: "./scripts/FeatureFlagsSettings.ts"
+        launchDarklyService: "./scripts/launchdarkly.service.ts"
     },
     output: {
         filename: "[name].js",
