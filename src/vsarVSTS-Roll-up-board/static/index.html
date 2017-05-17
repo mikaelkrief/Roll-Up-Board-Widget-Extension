@@ -69,8 +69,13 @@
                 let webContext = VSS.getWebContext();
 
                 WidgetHelpers.IncludeWidgetStyles();
-
-                var ldclientServices = new ff.LaunchDarklyService({ "key": "" + webContext.user.email + "" });
+                var user = {
+                    "key": webContext.user.email,
+                    "custom" :{
+                        "vstsaccount" : webContext.account.name
+                    }
+                }
+                var ldclientServices = ff.LaunchDarklyService.Init(user);
                 ldclientServices.ldClient.on("ready", function () {
                     VSS.register("rollupboardwidget", () => {
                         ldclientServices.GetAllFlags();
