@@ -1,4 +1,5 @@
 import * as LDClient from "ldclient-js";
+import Q = require("q");
 
 export class LaunchDarklyService {
 
@@ -15,10 +16,17 @@ export class LaunchDarklyService {
             this._instance = new LaunchDarklyService();
             this._instance.ldClient = LDClient.initialize(this._instance.envId, user);
         }
-
         return this._instance;
     }
 
+    /*public static InitService(user: any): Q.Promise<any> {
+        var deferred = Q.defer<any>();
+        var ldclient = LDClient.initialize(this._instance.envId, user);
+        ldclient.on('ready', function () {
+            deferred.resolve(ldclient)
+        })
+        return deferred.promise;
+    }*/
     public GetAllFlags() {
         this.enabletelemetry = this.ldClient.variation("enable-telemetry", false);
         this.displayLogs = this.ldClient.variation("display-logs", false);

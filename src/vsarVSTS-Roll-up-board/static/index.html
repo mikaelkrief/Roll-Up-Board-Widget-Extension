@@ -70,10 +70,7 @@
 
                 WidgetHelpers.IncludeWidgetStyles();
                 var user = {
-                    "key": webContext.user.email,
-                    "custom" :{
-                        "vstsaccount" : webContext.account.name
-                    }
+                    "key": webContext.account.name +":"+ webContext.user.email
                 }
                 var ldclientServices = ff.LaunchDarklyService.Init(user);
                 ldclientServices.ldClient.on("ready", function () {

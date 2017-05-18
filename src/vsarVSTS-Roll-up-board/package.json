@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "copy": "cpx node_modules/telemetryclient/lib/*.* scripts",
+    "copy": "cpx node_modules/telemetryclient-team-services-extension/lib/*.* scripts",
     "build": "npm run copy && npm run lint && npm run clean && npm run webpack",
-    "postbuild": "rimraf ./scripts/telemetryclient.js && rimraf ./scripts/telemetryclient.d.ts && npm run gallery-publish",
+    "postbuildtest": "rimraf ./scripts/telemetryclient.js && rimraf ./scripts/telemetryclient.d.ts && npm run gallery-publish",
     "package": "tfx extension create  --rev-version",
     "gallery-publish": "tfx extension publish --rev-version --token 53plbqfsibqnynajzc3ac2gvayqdaz2kz65bv7a47nmjduwmbruq",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
@@ -25,7 +25,8 @@
     "@types/q": "0.0.32",
     "applicationinsights-js": "*",
     "ldclient-js": "^1.1.10",
-    "vss-web-extension-sdk": "^2.115.0"
+    "vss-web-extension-sdk": "^2.115.0",
+    "telemetryclient-team-services-extension": "*"
   },
   "name": "rollup",
   "private": true,
