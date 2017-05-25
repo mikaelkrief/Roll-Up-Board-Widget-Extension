@@ -116,7 +116,6 @@ export class WidgetRollUpBoard {
         }
         return this.WidgetHelpers.WidgetStatusHelper.Success();
     }
-
     private GetCurrentTeamFieldValues(): IPromise<WorkContracts.TeamFieldValue[]> {
         let deferred = $.Deferred<WorkContracts.TeamFieldValue[]>();
         this.client.getTeamFieldValues(this.GetCurrentTeamContext()).then((teamFieldValues) => {
