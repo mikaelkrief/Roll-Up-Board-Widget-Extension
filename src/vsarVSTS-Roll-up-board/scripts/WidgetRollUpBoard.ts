@@ -37,10 +37,12 @@ export class WidgetRollUpBoard {
     public boardRowField: string = "";
     public enableTelemetry = false;
     public displayLogs = false;
+    public LdclientServices: any;
 
-    constructor(public WidgetHelpers, public featureFlagsSettings) {
-        this.enableTelemetry = featureFlagsSettings.enabletelemetry;
-        this.displayLogs = featureFlagsSettings.displayLogs;
+    constructor(public WidgetHelpers, public ldclientServices) {
+        this.enableTelemetry = ldclientServices.enabletelemetry;
+        this.displayLogs = ldclientServices.displayLogs;
+        this.LdclientServices = ldclientServices;
     }
 
     IsVSTS(): boolean {
@@ -49,6 +51,7 @@ export class WidgetRollUpBoard {
 
     EnableAppInsightTelemetry(): boolean {
         // console.log("enableTelemetry2: " + this.enableTelemetry);
+        this.LdclientServices.Trackevent("enable-telemetry");
         return this.enableTelemetry;
     }
 

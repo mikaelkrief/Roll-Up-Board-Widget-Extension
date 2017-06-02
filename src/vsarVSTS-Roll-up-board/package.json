@@ -1,11 +1,12 @@
 {
   "scripts": {
-    "copy": "cpx node_modules/telemetryclient-team-services-extension/lib/*.* scripts",
-    "build": "npm run copy && npm run lint && npm run clean && npm run webpack",
-    "postbuild": "rimraf ./scripts/telemetryclient.js && rimraf ./scripts/telemetryclient.d.ts && npm run gallery-publish",
+    "build": "npm run copy-lib && npm run lint && npm run clean-before-build && npm run webpack",
+    "postbuild": "npm run clean-after-build && npm run gallery-publish",
+    "copy-lib": "cpx node_modules/telemetryclient-team-services-extension/lib/*.* scripts",
     "package": "tfx extension create  --rev-version",
     "gallery-publish": "tfx extension publish --rev-version --token 53plbqfsibqnynajzc3ac2gvayqdaz2kz65bv7a47nmjduwmbruq",
-    "clean": "rimraf ./dist && rimraf ./*.vsix",
+    "clean-before-build": "rimraf ./dist && rimraf ./*.vsix",
+    "clean-after-build": "rimraf ./scripts/telemetryclient.js && rimraf ./scripts/telemetryclient.d.ts",
     "lint": "tslint -c tslint.json \"scripts/*.ts",
     "webpack": "webpack --progress --colors --config webpack.config.js --output-path ./dist -p"
   },

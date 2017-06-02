@@ -73,6 +73,7 @@
                     "key": webContext.account.name +":"+ webContext.user.email
                 }
                 var ldclientServices = ff.LaunchDarklyService.Init(user);
+                console.log(ldclientServices.ldClient);
                 ldclientServices.ldClient.on("ready", function () {
                     VSS.register("rollupboardwidget", () => {
                         ldclientServices.GetAllFlags();

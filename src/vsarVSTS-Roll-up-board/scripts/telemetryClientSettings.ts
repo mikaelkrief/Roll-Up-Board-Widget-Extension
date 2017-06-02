@@ -13,7 +13,7 @@
 import * as tc from "telemetryclient-team-services-extension";
 
 export const settings: tc.TelemetryClientSettings = {
-    key: "__INSTRUMENTATIONKEY__",
+    key: "21100e97-0b88-48ea-a1bb-efa840af423a",
     extensioncontext: "RollUpBoardWidget",
     disableTelemetry: "false",
     disableAjaxTracking: "__disableAjaxTracking__",

@@ -10,7 +10,7 @@
 // </summary>
 // ---------------------------------------------------------------------
 
- /// <reference types="vss-web-extension-sdk" />
+/// <reference types="vss-web-extension-sdk" />
 /// <reference path="isettings.d.ts" />
 "use strict";
 import RestClient = require("TFS/Work/RestClient");
@@ -22,14 +22,19 @@ import Context = require("VSS/Context");
 
 import * as telemclient from "telemetryclient-team-services-extension";
 import telemetryClientSettings = require("./telemetryClientSettings");
-
+import * as ldservice from "./launchdarkly.service";
 export class Configuration {
     widgetConfigurationContext = null;
 
     $select = $("#board-dropdown");
+    $enableff = $("#enableff");
     public client = RestClient.getClient();
     public _widgetHelpers;
-    constructor(public WidgetHelpers) {
+    public LdclientServices: any;
+
+    constructor(public WidgetHelpers, public ldclientServices) {
+        this.LdclientServices = ldclientServices;
+        console.log(this.ldclientServices);
     }
 
     IsVSTS(): boolean {
@@ -83,6 +88,11 @@ export class Configuration {
                 $boardDropdown.val("");
             }
 
+            _that.$enableff.change(() => {
+                console.log(_that.$enableff.is(":checked"));
+                this.SetEnableFF();
+            });
+
             return _that.WidgetHelpers.WidgetStatusHelper.Success();
         });
     }
@@ -109,6 +119,20 @@ export class Configuration {
 
         return deferred.promise;
     }
+    private SetEnableFF() {
+
+        $.ajax({
+            url: "https://vstsextcrypto.azurewebsites.net/api/HttpTriggerJS1?code=KAcuJd2suS14yMGIYHMhu3NL6BtrR8ZEASz1I/e5wNqP/s5M9YFVSQ==",
+            contentType : "application/json; charset=UTF-8",
+            type: "POST",
+            dataType: "json",
+            headers: { "Access-Control-Allow-Origin": "*" },
+            data: "{'userkey':'test'}",
+            success: c => {
+                console.log(c);
+            }
+        });
+    }
 
     public getCustomSettings() {
         let result = { data: JSON.stringify(<ISettings>{ board: $("#board-dropdown").val() }) };
@@ -118,14 +142,5 @@ export class Configuration {
     public onSave() {
         return this.WidgetHelpers.WidgetConfigurationSave.Valid(this.getCustomSettings());
     }
+
 }
-
-VSS.require(["TFS/Dashboards/WidgetHelpers"], (WidgetHelpers) => {
-    WidgetHelpers.IncludeWidgetConfigurationStyles();
-    VSS.register("rollupboardwidget-Configuration", () => {
-        let configuration = new Configuration(WidgetHelpers);
-        return configuration;
-    });
-
-    VSS.notifyLoadSucceeded();
-});

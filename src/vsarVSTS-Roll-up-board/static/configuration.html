@@ -13,6 +13,7 @@
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <link href="css/app.css" rel="stylesheet" />
 </head>
@@ -26,21 +27,42 @@
                     <select id="board-dropdown"></select>
                 </div>
             </div>
+            <div id="ff">
+                <legend>Enable preview feature</legend>
+                <label class="switch"><input type="checkbox" id="enableff"><div class="slider round"></div></label>
+            </div>
         </div>
-    </div>
-    <script src="../lib/VSS.SDK.min.js"></script>
-    <script src="../lib/ai.0.js"></script>
-    <script type="text/javascript">
-        VSS.init({
-            explicitNotifyLoaded: true,
-            usePlatformStyles: true,
-            usePlatformScripts: true,
-            setupModuleLoader: true
-        });
+        <script src="../lib/VSS.SDK.min.js"></script>
+        <script src="../lib/ai.0.js"></script>
+        <script src="../lib/ldclient.min.js"></script>
+        <script type="text/javascript">
+            VSS.init({
+                explicitNotifyLoaded: true,
+                usePlatformStyles: true,
+                usePlatformScripts: true,
+                setupModuleLoader: true
+            });
 
-        VSS.ready(function () {
-            VSS.require(["../dist/configuration"], function (configuration) { });
-        });
-    </script>
+
+            VSS.ready(function () {
+                VSS.require(["dist/configuration", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (config, WidgetHelpers, ff) {
+                    let webContext = VSS.getWebContext();
+                    WidgetHelpers.IncludeWidgetConfigurationStyles();
+                    var user = {
+                        "key": webContext.account.name + ":" + webContext.user.email
+                    }
+                    var ldclientServices = ff.LaunchDarklyService.Init(user);
+                    ldclientServices.ldClient.on("ready", function () {
+                        VSS.register("rollupboardwidget-Configuration", () => {
+                            ldclientServices.GetAllFlags();
+                            let configuration = new config.Configuration(WidgetHelpers,ldclientServices);
+                            return configuration;                   
+                        });
+                         VSS.notifyLoadSucceeded();
+                    });
+                });
+            });
+        </script>
 </body>
+
 </html>
