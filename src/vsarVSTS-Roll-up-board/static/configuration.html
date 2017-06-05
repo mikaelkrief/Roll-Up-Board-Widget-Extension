@@ -51,14 +51,15 @@
                     var user = {
                         "key": webContext.account.name + ":" + webContext.user.email
                     }
-                    var ldclientServices = ff.LaunchDarklyService.Init(user);
-                    ldclientServices.ldClient.on("ready", function () {
-                        VSS.register("rollupboardwidget-Configuration", () => {
-                            ldclientServices.GetAllFlags();
-                            let configuration = new config.Configuration(WidgetHelpers,ldclientServices);
-                            return configuration;                   
+                    ff.LaunchDarklyService.Init(user).then((p) => {
+                        p.ldClient.on("ready", function () {
+                            VSS.register("rollupboardwidget-Configuration", () => {
+                                 ff.LaunchDarklyService.GetAllFlags();
+                                let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
+                                return configuration;
+                            });
+                            VSS.notifyLoadSucceeded();
                         });
-                         VSS.notifyLoadSucceeded();
                     });
                 });
             });

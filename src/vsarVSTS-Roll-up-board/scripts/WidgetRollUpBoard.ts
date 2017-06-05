@@ -50,7 +50,6 @@ export class WidgetRollUpBoard {
     }
 
     EnableAppInsightTelemetry(): boolean {
-        // console.log("enableTelemetry2: " + this.enableTelemetry);
         this.LdclientServices.Trackevent("enable-telemetry");
         return this.enableTelemetry;
     }
@@ -619,9 +618,9 @@ export class WidgetRollUpBoard {
             this.boardRowField = board.fields.rowField.referenceName;
         }
 
-        console.log("this.boardColumnField : " + this.boardColumnField);
-        console.log("this.boardDoneField : " + this.boardDoneField);
-        console.log("this.boardRowField : " + this.boardRowField);
+        this.DisplayLog("this.boardColumnField : " + this.boardColumnField);
+        this.DisplayLog("this.boardDoneField : " + this.boardDoneField);
+        this.DisplayLog("this.boardRowField : " + this.boardRowField);
     }
 
     private SortLowToHighColumn(a: Board.Column, b: Board.Column) {

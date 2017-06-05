@@ -67,20 +67,20 @@
             VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (app, WidgetHelpers, ff) {
 
                 let webContext = VSS.getWebContext();
-
                 WidgetHelpers.IncludeWidgetStyles();
                 var user = {
-                    "key": webContext.account.name +":"+ webContext.user.email
+                    "key": webContext.account.name + ":" + webContext.user.email
                 }
-                var ldclientServices = ff.LaunchDarklyService.Init(user);
-                console.log(ldclientServices.ldClient);
-                ldclientServices.ldClient.on("ready", function () {
-                    VSS.register("rollupboardwidget", () => {
-                        ldclientServices.GetAllFlags();
-                        let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ldclientServices);
-                        return rollupboard;
+                ff.LaunchDarklyService.Init(user).then((p) => {
+                    //console.log(p.ldClient);
+                    p.ldClient.on("ready", function () {
+                        VSS.register("rollupboardwidget", () => {
+                            ff.LaunchDarklyService.GetAllFlags();
+                            let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ff.LaunchDarklyService);
+                            return rollupboard;
+                        });
+                        VSS.notifyLoadSucceeded();
                     });
-                    VSS.notifyLoadSucceeded();
                 });
             });
         });

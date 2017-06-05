@@ -119,19 +119,13 @@ export class Configuration {
 
         return deferred.promise;
     }
-    private SetEnableFF() {
-
-        $.ajax({
-            url: "https://vstsextcrypto.azurewebsites.net/api/HttpTriggerJS1?code=KAcuJd2suS14yMGIYHMhu3NL6BtrR8ZEASz1I/e5wNqP/s5M9YFVSQ==",
-            contentType : "application/json; charset=UTF-8",
-            type: "POST",
-            dataType: "json",
-            headers: { "Access-Control-Allow-Origin": "*" },
-            data: "{'userkey':'test'}",
-            success: c => {
-                console.log(c);
-            }
+    private SetEnableFF(): Promise<string> {
+        let deferred = Q.defer<string>();
+        this.LdclientServices.UpdateUserFeature(this.LdclientServices.user, true).then((r) => {
+            console.log(r);
+            deferred.resolve(r);
         });
+        return deferred.promise;
     }
 
     public getCustomSettings() {
