@@ -31,9 +31,11 @@ export class Configuration {
     public client = RestClient.getClient();
     public _widgetHelpers;
     public LdclientServices: any;
+    public showNewDone: boolean;
 
     constructor(public WidgetHelpers, public ldclientServices) {
         this.LdclientServices = ldclientServices;
+        this.showNewDone = this.ldclientServices.showNewDone;
         console.log(this.ldclientServices);
     }
 
@@ -88,9 +90,10 @@ export class Configuration {
                 $boardDropdown.val("");
             }
 
+            _that.$enableff.prop("checked", this.showNewDone);
             _that.$enableff.change(() => {
-                console.log(_that.$enableff.is(":checked"));
-                this.SetEnableFF();
+                let enabledFeature = _that.$enableff.is(":checked");
+                this.SetEnableFF(enabledFeature, "show-newdone");
             });
 
             return _that.WidgetHelpers.WidgetStatusHelper.Success();
@@ -119,9 +122,9 @@ export class Configuration {
 
         return deferred.promise;
     }
-    private SetEnableFF(): Promise<string> {
+    private SetEnableFF(enabled: boolean, feature: string): Promise<string> {
         let deferred = Q.defer<string>();
-        this.LdclientServices.UpdateUserFeature(this.LdclientServices.user, true).then((r) => {
+        this.LdclientServices.UpdateUserFeature(this.LdclientServices.user, enabled, feature).then((r) => {
             console.log(r);
             deferred.resolve(r);
         });

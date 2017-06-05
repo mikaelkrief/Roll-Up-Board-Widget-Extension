@@ -54,11 +54,14 @@
                     ff.LaunchDarklyService.Init(user).then((p) => {
                         p.ldClient.on("ready", function () {
                             VSS.register("rollupboardwidget-Configuration", () => {
-                                 ff.LaunchDarklyService.GetAllFlags();
+                                ff.LaunchDarklyService.GetAllFlags();
                                 let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
                                 return configuration;
                             });
                             VSS.notifyLoadSucceeded();
+                        });
+                        p.ldclient.on('change', function (settings) {
+                            console.log(settings);
                         });
                     });
                 });

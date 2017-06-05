@@ -6,6 +6,7 @@ export class LaunchDarklyService {
     public envId: string = "590348c958ed570a3af8a496";
     public static enabletelemetry: boolean;
     public static displayLogs: boolean;
+    public static showNewDone: boolean;
     private static _instance: LaunchDarklyService;
     public static user: any;
 
@@ -30,9 +31,10 @@ export class LaunchDarklyService {
     public static GetAllFlags() {
         this.enabletelemetry = this._instance.ldClient.variation("enable-telemetry", false);
         this.displayLogs = this._instance.ldClient.variation("display-logs", false);
+        this.showNewDone = this._instance.ldClient.variation("show-newdone", false);
         console.log("this.displayLogs: " + this.displayLogs);
         console.log("this.enabletelemetry: " + this.enabletelemetry);
-
+        console.log("this.showNewDone: " + this.showNewDone);
         // for view all user flags
         // let flags = ldclient.allFlags();
     }
@@ -60,7 +62,7 @@ export class LaunchDarklyService {
         return deferred.promise;
     }
 
-    public static UpdateUserFeature(user, enable/*, project, env, feature*/): Promise<string> {
+    public static UpdateUserFeature(user, enable, feature/*, project, env*/): Promise<string> {
         let deferred = Q.defer<string>();
         console.log(user);
         if (user) {
@@ -70,7 +72,7 @@ export class LaunchDarklyService {
                 type: "POST",
                 dataType: "json",
                 headers: { "Access-Control-Allow-Origin": "*" },
-                data: "{'userkey':'" + user.key + "', 'active':" + enable + " }",
+                data: "{'userkey':'" + user.key + "', 'active':" + enable + ", 'feature' : '" + feature + "' }",
                 success: c => {
                     deferred.resolve(c);
                 }
