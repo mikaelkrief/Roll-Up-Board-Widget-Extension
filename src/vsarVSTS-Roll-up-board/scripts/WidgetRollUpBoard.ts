@@ -40,8 +40,8 @@ export class WidgetRollUpBoard {
     public LdclientServices: any;
 
     constructor(public WidgetHelpers, public ldclientServices) {
-        this.enableTelemetry = ldclientServices.enabletelemetry;
-        this.displayLogs = ldclientServices.displayLogs;
+        this.enableTelemetry = ldclientServices.flags["enable-telemetry"];
+        this.displayLogs = ldclientServices.flags["display-logs"];
         this.LdclientServices = ldclientServices;
     }
 

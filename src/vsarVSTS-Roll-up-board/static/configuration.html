@@ -27,9 +27,20 @@
                     <select id="board-dropdown"></select>
                 </div>
             </div>
-            <div id="ff">
-                <legend>Enable preview feature</legend>
+           
+            <fieldset class="checkbox" id="select-results">
+                <input type="checkbox" id="hidenewdone" value="id" name="check" checked="true">
+                <label for="check-option1">Hide New/Done column</label><br/>
+            </fieldset>
+            <div id="ff" style="margin-top:15px;background-color:#eff6fc;display:block">
+                <legend>Area Path Filter - Enable this preview feature</legend>
                 <label class="switch"><input type="checkbox" id="enableff"><div class="slider round"></div></label>
+                <div class="dropdown" id="area-path-dropdown">
+                    <label>Area path</label>
+                    <div class="wrapper">
+                        <select id="areapath-dropdown"></select>
+                    </div>
+                </div>
             </div>
         </div>
         <script src="../lib/VSS.SDK.min.js"></script>
@@ -54,14 +65,11 @@
                     ff.LaunchDarklyService.Init(user).then((p) => {
                         p.ldClient.on("ready", function () {
                             VSS.register("rollupboardwidget-Configuration", () => {
-                                ff.LaunchDarklyService.GetAllFlags();
+                                ff.LaunchDarklyService.SetFlags();
                                 let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
                                 return configuration;
                             });
                             VSS.notifyLoadSucceeded();
-                        });
-                        p.ldclient.on('change', function (settings) {
-                            console.log(settings);
                         });
                     });
                 });

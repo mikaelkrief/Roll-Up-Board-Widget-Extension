@@ -75,7 +75,7 @@
                     //console.log(p.ldClient);
                     p.ldClient.on("ready", function () {
                         VSS.register("rollupboardwidget", () => {
-                            ff.LaunchDarklyService.GetAllFlags();
+                            ff.LaunchDarklyService.SetFlags();
                             let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ff.LaunchDarklyService);
                             return rollupboard;
                         });

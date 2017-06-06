@@ -101,8 +101,8 @@ tr {
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 25px;
+  width: 44px;
+  height: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -124,8 +124,8 @@ tr {
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 12px;
+  width: 12px;
   left: 4px;
   bottom: 4px;
   background-color: white;

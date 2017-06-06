@@ -4,11 +4,9 @@ export class LaunchDarklyService {
 
     public ldClient: any;
     public envId: string = "590348c958ed570a3af8a496";
-    public static enabletelemetry: boolean;
-    public static displayLogs: boolean;
-    public static showNewDone: boolean;
     private static _instance: LaunchDarklyService;
     public static user: any;
+    public static flags: any;
 
     constructor() { }
 
@@ -20,6 +18,13 @@ export class LaunchDarklyService {
                 this._instance.ldClient = LDClient.initialize(this._instance.envId, user, {
                     hash: h
                 });
+
+                this._instance.ldClient.on("change", (flags) => {
+                    // console.log(flags);
+                    // this.showNewDone = flags["show-newdone"].current;
+                    this.SetFlags();
+                    // console.log(this.showNewDone);
+                });
                 this.user = user;
 
                 deferred.resolve(this._instance);
@@ -28,16 +33,22 @@ export class LaunchDarklyService {
         return deferred.promise;
     }
 
-    public static GetAllFlags() {
+    public static SetFlags() {
+        this.flags = this._instance.ldClient.allFlags();
+    }
+
+    public static UpdateFlag(feature, value) {
+        this.flags[feature] = value;
+    }
+
+    /*public static GetAllFlags() {
         this.enabletelemetry = this._instance.ldClient.variation("enable-telemetry", false);
         this.displayLogs = this._instance.ldClient.variation("display-logs", false);
         this.showNewDone = this._instance.ldClient.variation("show-newdone", false);
         console.log("this.displayLogs: " + this.displayLogs);
         console.log("this.enabletelemetry: " + this.enabletelemetry);
         console.log("this.showNewDone: " + this.showNewDone);
-        // for view all user flags
-        // let flags = ldclient.allFlags();
-    }
+    }*/
 
     public static Trackevent(event: string) {
         this._instance.ldClient.track(event);

@@ -28,6 +28,7 @@ export class Configuration {
 
     $select = $("#board-dropdown");
     $enableff = $("#enableff");
+    $hidenewdone = $("#select-results");
     public client = RestClient.getClient();
     public _widgetHelpers;
     public LdclientServices: any;
@@ -35,7 +36,7 @@ export class Configuration {
 
     constructor(public WidgetHelpers, public ldclientServices) {
         this.LdclientServices = ldclientServices;
-        this.showNewDone = this.ldclientServices.showNewDone;
+        this.showNewDone = this.ldclientServices.flags["show-newdone"];
         console.log(this.ldclientServices);
     }
 
@@ -48,6 +49,9 @@ export class Configuration {
     }
 
     public load(widgetSettings, widgetConfigurationContext) {
+        this.DisplayAreaPathDropdown();
+        this.DisplayCheckboxHideNewDone();
+
         if (this.EnableAppInsightTelemetry()) {
             telemclient.TelemetryClient.getClient(telemetryClientSettings.settings).trackPageView("RollUpBoard.Configuration");
         } else {
@@ -90,10 +94,16 @@ export class Configuration {
                 $boardDropdown.val("");
             }
 
-            _that.$enableff.prop("checked", this.showNewDone);
+            _that.$enableff.prop("checked", this.ldclientServices.flags["filter-areapath"]);
             _that.$enableff.change(() => {
                 let enabledFeature = _that.$enableff.is(":checked");
-                this.SetEnableFF(enabledFeature, "show-newdone");
+                this.SetEnableFF(enabledFeature, "filter-areapath").then((e) => {
+                    if (e = "204") {
+                        this.LdclientServices.UpdateFlag("filter-areapath", enabledFeature);
+                        console.log(this.ldclientServices.flags["filter-areapath"]);
+                        this.DisplayAreaPathDropdown();
+                    }
+                });
             });
 
             return _that.WidgetHelpers.WidgetStatusHelper.Success();
@@ -129,6 +139,23 @@ export class Configuration {
             deferred.resolve(r);
         });
         return deferred.promise;
+    }
+
+    public DisplayCheckboxHideNewDone() {
+        if (this.ldclientServices.flags["show-newdone"]) {
+            $("#select-results").show();
+        } else {
+            $("#select-results").hide();
+        }
+    }
+
+    public DisplayAreaPathDropdown() {
+        console.log("filter-areapath: " + this.ldclientServices.flags["filter-areapath"]);
+        if (this.ldclientServices.flags["filter-areapath"]) {
+            $("#area-path-dropdown").show();
+        } else {
+            $("#area-path-dropdown").hide();
+        }
     }
 
     public getCustomSettings() {
