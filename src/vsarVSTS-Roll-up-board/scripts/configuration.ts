@@ -33,29 +33,23 @@ export class Configuration {
     public _widgetHelpers;
     public LdclientServices: any;
     public showNewDone: boolean;
+    public enableTelemetry = false;
 
     constructor(public WidgetHelpers, public ldclientServices) {
         this.LdclientServices = ldclientServices;
         this.showNewDone = this.ldclientServices.flags["show-newdone"];
-        console.log(this.ldclientServices);
+        this.enableTelemetry = ldclientServices.flags["enable-telemetry"];
     }
 
     IsVSTS(): boolean {
         return Context.getPageContext().webAccessConfiguration.isHosted;
     }
-
-    EnableAppInsightTelemetry(): boolean {
-        return true;
-    }
-
     public load(widgetSettings, widgetConfigurationContext) {
         this.DisplayAreaPathDropdown();
         this.DisplayCheckboxHideNewDone();
 
-        if (this.EnableAppInsightTelemetry()) {
+        if (this.enableTelemetry) {
             telemclient.TelemetryClient.getClient(telemetryClientSettings.settings).trackPageView("RollUpBoard.Configuration");
-        } else {
-            console.log("App Insight Telemetry is disabled");
         }
 
         let _that = this;
@@ -100,7 +94,6 @@ export class Configuration {
                 this.SetEnableFF(enabledFeature, "filter-areapath").then((e) => {
                     if (e = "204") {
                         this.LdclientServices.UpdateFlag("filter-areapath", enabledFeature);
-                        console.log(this.ldclientServices.flags["filter-areapath"]);
                         this.DisplayAreaPathDropdown();
                     }
                 });
@@ -150,6 +143,7 @@ export class Configuration {
     }
 
     public DisplayAreaPathDropdown() {
+        $("#area-path-dropdown").hide();
         console.log("filter-areapath: " + this.ldclientServices.flags["filter-areapath"]);
         if (this.ldclientServices.flags["filter-areapath"]) {
             $("#area-path-dropdown").show();

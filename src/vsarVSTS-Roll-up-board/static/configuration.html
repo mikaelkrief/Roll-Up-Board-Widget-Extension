@@ -27,7 +27,6 @@
                     <select id="board-dropdown"></select>
                 </div>
             </div>
-           
             <fieldset class="checkbox" id="select-results">
                 <input type="checkbox" id="hidenewdone" value="id" name="check" checked="true">
                 <label for="check-option1">Hide New/Done column</label><br/>
@@ -38,7 +37,10 @@
                 <div class="dropdown" id="area-path-dropdown">
                     <label>Area path</label>
                     <div class="wrapper">
-                        <select id="areapath-dropdown"></select>
+                        <select id="areapath-dropdown">
+                            <option>Area 1</option>
+                            <option>Area 1 / Area 1.1</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -54,6 +56,7 @@
                 setupModuleLoader: true
             });
 
+          
 
             VSS.ready(function () {
                 VSS.require(["dist/configuration", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (config, WidgetHelpers, ff) {

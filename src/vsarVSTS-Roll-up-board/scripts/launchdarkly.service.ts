@@ -20,10 +20,7 @@ export class LaunchDarklyService {
                 });
 
                 this._instance.ldClient.on("change", (flags) => {
-                    // console.log(flags);
-                    // this.showNewDone = flags["show-newdone"].current;
                     this.SetFlags();
-                    // console.log(this.showNewDone);
                 });
                 this.user = user;
 
@@ -41,15 +38,6 @@ export class LaunchDarklyService {
         this.flags[feature] = value;
     }
 
-    /*public static GetAllFlags() {
-        this.enabletelemetry = this._instance.ldClient.variation("enable-telemetry", false);
-        this.displayLogs = this._instance.ldClient.variation("display-logs", false);
-        this.showNewDone = this._instance.ldClient.variation("show-newdone", false);
-        console.log("this.displayLogs: " + this.displayLogs);
-        console.log("this.enabletelemetry: " + this.enabletelemetry);
-        console.log("this.showNewDone: " + this.showNewDone);
-    }*/
-
     public static Trackevent(event: string) {
         this._instance.ldClient.track(event);
     }
@@ -57,7 +45,7 @@ export class LaunchDarklyService {
         let deferred = Q.defer<string>();
         if (hash) {
             $.ajax({
-                url: "https://vstsextcrypto.azurewebsites.net/api/HttpTriggerJS1?code=KAcuJd2suS14yMGIYHMhu3NL6BtrR8ZEASz1I/e5wNqP/s5M9YFVSQ==",
+                url: "https://vstsextcrypto.azurewebsites.net/api/GetHashKey?code=aqi3cVQPaTfQaT0dBaQoJ0k/LiVlZVmQU4FRHpgbKPHbHIuZ9y4eoA==",
                 contentType: "application/json; charset=UTF-8",
                 type: "POST",
                 dataType: "json",
@@ -75,10 +63,9 @@ export class LaunchDarklyService {
 
     public static UpdateUserFeature(user, enable, feature/*, project, env*/): Promise<string> {
         let deferred = Q.defer<string>();
-        console.log(user);
         if (user) {
             $.ajax({
-                url: "https://vstsextcrypto.azurewebsites.net/api/HttpTriggerJS2?code=//ufvbsCUayEkeDsn06T3rUj6ijbUCO0epCDi1XNC0AHk5a4vVxmaQ==",
+                url: "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==",
                 contentType: "application/json; charset=UTF-8",
                 type: "POST",
                 dataType: "json",

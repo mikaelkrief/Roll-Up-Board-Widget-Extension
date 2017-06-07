@@ -43,15 +43,19 @@ export class WidgetRollUpBoard {
         this.enableTelemetry = ldclientServices.flags["enable-telemetry"];
         this.displayLogs = ldclientServices.flags["display-logs"];
         this.LdclientServices = ldclientServices;
+
+        this.LdclientServices.Trackevent("enable-telemetry");
+
+        if (this.enableTelemetry) {
+            console.log("Application Insights Telemetry is Enabled");
+        } else {
+            console.log("Application Insights Telemetry is Disabled");
+        }
+
     }
 
     IsVSTS(): boolean {
         return Context.getPageContext().webAccessConfiguration.isHosted;
-    }
-
-    EnableAppInsightTelemetry(): boolean {
-        this.LdclientServices.Trackevent("enable-telemetry");
-        return this.enableTelemetry;
     }
 
     DisplayLog(message: string) {
@@ -61,10 +65,8 @@ export class WidgetRollUpBoard {
     }
 
     public LoadRollUp(widgetSettings) {
-        if (this.EnableAppInsightTelemetry()) {
+        if (this.enableTelemetry) {
             tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackPageView("RollUpBoard.Index");
-        } else {
-            console.log("App Insight Telemetry is disabled");
         }
 
         let customSettings = <ISettings>JSON.parse(widgetSettings.customSettings.data);
@@ -96,17 +98,13 @@ export class WidgetRollUpBoard {
                 $("#loadingwidget").attr("style", "display:none");
                 $("#content").attr("style", "display:block");
 
-                if (this.EnableAppInsightTelemetry()) {
+                if (this.enableTelemetry) {
                     tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackEvent("RollUpBoard.LoadRollUp", { BoardName: customSettings.board });
-                } else {
-                    console.log("App Insight Telemetry is disabled");
                 }
 
             }, function (reject) {
-                if (this.EnableAppInsightTelemetry()) {
+                if (this.enableTelemetry) {
                     tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.LoadRollUp");
-                } else {
-                    console.log("App Insight Telemetry is disabled");
                 }
                 console.log(reject);
             });
@@ -157,11 +155,8 @@ export class WidgetRollUpBoard {
                     board.columns = columns;
                     deferred.resolve(board);
                 }, function (reject) {
-                    if (this.EnableAppInsightTelemetry()) {
+                    if (this.enableTelemetry) {
                         tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.GetBoard");
-                    }
-                    else {
-                        console.log("App Insight Telemetry is disabled");
                     }
                     console.log(reject);
                 });
@@ -458,10 +453,8 @@ export class WidgetRollUpBoard {
 
                 deferred.resolve(column);
             }, function (reject) {
-                if (this.EnableAppInsightTelemetry()) {
+                if (this.enableTelemetry) {
                     tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.SetArrayColumnWithRow");
-                } else {
-                    console.log("App Insight Telemetry is disabled");
                 }
                 console.log(reject);
             });
@@ -475,10 +468,8 @@ export class WidgetRollUpBoard {
 
                 deferred.resolve(column);
             }, function (reject) {
-                if (this.EnableAppInsightTelemetry()) {
+                if (this.enableTelemetry) {
                     tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.SetArrayColumnSimple");
-                } else {
-                    console.log("App Insight Telemetry is disabled");
                 }
                 console.log(reject);
             });
@@ -561,11 +552,9 @@ export class WidgetRollUpBoard {
                         this.DisplayLog("3: " + wiql.query); // SHOW DEBUG
                         deferred.resolve(nbWi);
                     }, function (reject) {
-                        if (this.EnableAppInsightTelemetry()) {
+                        if (this.enableTelemetry) {
                             tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.GetNbWIForColumnAndRow.ColumnDone");
-                        } else {
-                            console.log("App Insight Telemetry is disabled");
-                        }
+                        };
                         console.log(reject);
                     });
                 });
@@ -574,11 +563,9 @@ export class WidgetRollUpBoard {
                 deferred.resolve(nbWi);
             }
         }, function (reject) {
-            if (this.EnableAppInsightTelemetry()) {
+            if (this.enableTelemetry) {
                 tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackException(reject, "RollUpBoard.GetNbWIForColumnAndRow");
-            } else {
-                console.log("App Insight Telemetry is disabled");
-            }
+            };
             console.log(reject);
         });
         return deferred.promise();
