@@ -39,12 +39,14 @@ export class Configuration {
         this.LdclientServices = ldclientServices;
         this.showNewDone = this.ldclientServices.flags["show-newdone"];
         this.enableTelemetry = ldclientServices.flags["enable-telemetry"];
+
     }
 
     IsVSTS(): boolean {
         return Context.getPageContext().webAccessConfiguration.isHosted;
     }
     public load(widgetSettings, widgetConfigurationContext) {
+        this.DisplayDemo();
         this.DisplayAreaPathDropdown();
         this.DisplayCheckboxHideNewDone();
 
@@ -91,10 +93,12 @@ export class Configuration {
             _that.$enableff.prop("checked", this.ldclientServices.flags["filter-areapath"]);
             _that.$enableff.change(() => {
                 let enabledFeature = _that.$enableff.is(":checked");
+                this.DisplayAreaPathDropdownClientSide(enabledFeature);
                 this.SetEnableFF(enabledFeature, "filter-areapath").then((e) => {
                     if (e = "204") {
                         this.LdclientServices.UpdateFlag("filter-areapath", enabledFeature);
                         this.DisplayAreaPathDropdown();
+                        this.LdclientServices.Trackevent("filter-areapath");
                     }
                 });
             });
@@ -149,6 +153,23 @@ export class Configuration {
             $("#area-path-dropdown").show();
         } else {
             $("#area-path-dropdown").hide();
+        }
+    }
+    public DisplayAreaPathDropdownClientSide(enable: boolean) {
+        $("#area-path-dropdown").hide();
+        if (enable) {
+            $("#area-path-dropdown").show();
+        } else {
+            $("#area-path-dropdown").hide();
+        }
+    }
+    public DisplayDemo() {
+        $("#ff-demo").hide();
+        console.log("demo: " + this.ldclientServices.flags["demo"]);
+        if (this.ldclientServices.flags["demo"]) {
+            $("#ff-demo").show();
+        } else {
+            $("#ff-demo").hide();
         }
     }
 
