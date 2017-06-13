@@ -65,10 +65,10 @@
                     var user = {
                         "key": webContext.account.name + ":" + webContext.user.email
                     }
-                    ff.LaunchDarklyService.Init(user).then((p) => {
+                    ff.LaunchDarklyService.init(user).then((p) => {
                         p.ldClient.on("ready", function () {
                             VSS.register("rollupboardwidget-Configuration", () => {
-                                ff.LaunchDarklyService.SetFlags();
+                                ff.LaunchDarklyService.setFlags();
                                 let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
                                 return configuration;
                             });

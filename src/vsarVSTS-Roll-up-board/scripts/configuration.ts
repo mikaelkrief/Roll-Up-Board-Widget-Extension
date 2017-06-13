@@ -96,9 +96,9 @@ export class Configuration {
                 this.DisplayAreaPathDropdownClientSide(enabledFeature);
                 this.SetEnableFF(enabledFeature, "filter-areapath").then((e) => {
                     if (e = "204") {
-                        this.LdclientServices.UpdateFlag("filter-areapath", enabledFeature);
+                        this.LdclientServices.updateFlag("filter-areapath", enabledFeature);
                         this.DisplayAreaPathDropdown();
-                        this.LdclientServices.Trackevent("filter-areapath");
+                        this.LdclientServices.trackEvent("filter-areapath");
                     }
                 });
             });
@@ -131,7 +131,7 @@ export class Configuration {
     }
     private SetEnableFF(enabled: boolean, feature: string): Promise<string> {
         let deferred = Q.defer<string>();
-        this.LdclientServices.UpdateUserFeature(this.LdclientServices.user, enabled, feature).then((r) => {
+        this.LdclientServices.updateUserFeature(this.LdclientServices.user, enabled, feature).then((r) => {
             console.log(r);
             deferred.resolve(r);
         });

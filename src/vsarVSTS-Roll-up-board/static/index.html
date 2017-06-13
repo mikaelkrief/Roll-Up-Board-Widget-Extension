@@ -71,11 +71,10 @@
                 var user = {
                     "key": webContext.account.name + ":" + webContext.user.email
                 }
-                ff.LaunchDarklyService.Init(user).then((p) => {
-                    //console.log(p.ldClient);
+                ff.LaunchDarklyService.init(user).then((p) => {
                     p.ldClient.on("ready", function () {
                         VSS.register("rollupboardwidget", () => {
-                            ff.LaunchDarklyService.SetFlags();
+                            ff.LaunchDarklyService.setFlags();
                             let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ff.LaunchDarklyService);
                             return rollupboard;
                         });

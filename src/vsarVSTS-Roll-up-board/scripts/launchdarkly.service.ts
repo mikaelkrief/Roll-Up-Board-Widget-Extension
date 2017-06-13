@@ -2,50 +2,54 @@ import * as LDClient from "ldclient-js";
 import Q = require("q");
 export class LaunchDarklyService {
 
+    // Private Settings to Tokenize
+    private envId: string = "590348c958ed570a3af8a496";
+    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/GetHashKey?code=aqi3cVQPaTfQaT0dBaQoJ0k/LiVlZVmQU4FRHpgbKPHbHIuZ9y4eoA==";
+    private static UriUpdateFlagUser: string = "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==";
+    // ----------------------------
     public ldClient: any;
-    public envId: string = "590348c958ed570a3af8a496";
-    private static _instance: LaunchDarklyService;
+    private static instance: LaunchDarklyService;
     public static user: any;
     public static flags: any;
 
     constructor() { }
 
-    public static Init(user: any): Promise<LaunchDarklyService> {
+    public static init(user: any): Promise<LaunchDarklyService> {
         let deferred = Q.defer<LaunchDarklyService>();
-        if (!this._instance) {
-            this._instance = new LaunchDarklyService();
-            this.HashUserKey(user, true).then((h) => {
-                this._instance.ldClient = LDClient.initialize(this._instance.envId, user, {
+        if (!this.instance) {
+            this.instance = new LaunchDarklyService();
+            this.hashUserKey(user, true).then((h) => {
+                this.instance.ldClient = LDClient.initialize(this.instance.envId, user, {
                     hash: h
                 });
 
-                this._instance.ldClient.on("change", (flags) => {
-                    this.SetFlags();
+                this.instance.ldClient.on("change", (flags) => {
+                    this.setFlags();
                 });
                 this.user = user;
 
-                deferred.resolve(this._instance);
+                deferred.resolve(this.instance);
             });
         }
         return deferred.promise;
     }
 
-    public static SetFlags() {
-        this.flags = this._instance.ldClient.allFlags();
+    public static setFlags() {
+        this.flags = this.instance.ldClient.allFlags();
     }
 
-    public static UpdateFlag(feature, value) {
+    public static updateFlag(feature, value) {
         this.flags[feature] = value;
     }
 
-    public static Trackevent(event: string) {
-        this._instance.ldClient.track(event);
+    public static trackEvent(event: string) {
+        this.instance.ldClient.track(event);
     }
-    private static HashUserKey(user, hash: boolean): Promise<string> {
+    private static hashUserKey(user, hash: boolean): Promise<string> {
         let deferred = Q.defer<string>();
         if (hash) {
             $.ajax({
-                url: "https://vstsextcrypto.azurewebsites.net/api/GetHashKey?code=aqi3cVQPaTfQaT0dBaQoJ0k/LiVlZVmQU4FRHpgbKPHbHIuZ9y4eoA==",
+                url: this.UriHashKey,
                 contentType: "application/json; charset=UTF-8",
                 type: "POST",
                 dataType: "json",
@@ -61,11 +65,11 @@ export class LaunchDarklyService {
         return deferred.promise;
     }
 
-    public static UpdateUserFeature(user, enable, feature/*, project, env*/): Promise<string> {
+    public static updateUserFeature(user, enable, feature/*, project, env*/): Promise<string> {
         let deferred = Q.defer<string>();
         if (user) {
             $.ajax({
-                url: "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==",
+                url: this.UriUpdateFlagUser,
                 contentType: "application/json; charset=UTF-8",
                 type: "POST",
                 dataType: "json",
