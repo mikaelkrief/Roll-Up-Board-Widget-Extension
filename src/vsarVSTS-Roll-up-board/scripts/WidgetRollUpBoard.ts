@@ -20,6 +20,7 @@ import RestClientWI = require("TFS/WorkItemTracking/RestClient");
 import WorkItemsContracts = require("TFS/WorkItemTracking/Contracts");
 import Q = require("q");
 import Board = require("./RollUpBoard");
+import Services = require("VSS/Authentication/Services");
 
 import * as tc from "telemetryclient-team-services-extension";
 import telemetryClientSettings = require("./telemetryClientSettings");
@@ -44,7 +45,7 @@ export class WidgetRollUpBoard {
         this.displayLogs = ldclientServices.flags["display-logs"];
         this.LdclientServices = ldclientServices;
 
-        this.LdclientServices.Trackevent("enable-telemetry");
+        this.LdclientServices.trackEvent("enable-telemetry");
 
         if (this.enableTelemetry) {
             console.log("Application Insights Telemetry is Enabled");
@@ -65,6 +66,9 @@ export class WidgetRollUpBoard {
     }
 
     public LoadRollUp(widgetSettings) {
+
+        console.log(VSS.getWebContext());
+
         if (this.enableTelemetry) {
             tc.TelemetryClient.getClient(telemetryClientSettings.settings).trackPageView("RollUpBoard.Index");
         }

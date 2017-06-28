@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "RollUpBoardWidgetTest",
-  "version": "3.3.134",
+  "version": "3.3.172",
   "name": "RollUp Board Test",
   "scopes": [
     "vso.work"

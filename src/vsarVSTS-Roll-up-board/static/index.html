@@ -64,21 +64,30 @@
 
         // Wait for the SDK to be initialized
         VSS.ready(function () {
-            VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (app, WidgetHelpers, ff) {
+            VSS.require(["../dist/WidgetRollUpBoard", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService", "VSS/Authentication/Services"], function (app, WidgetHelpers, ff, Services) {
 
-                let webContext = VSS.getWebContext();
-                WidgetHelpers.IncludeWidgetStyles();
-                var user = {
-                    "key": webContext.account.name + ":" + webContext.user.email
-                }
-                ff.LaunchDarklyService.init(user).then((p) => {
-                    p.ldClient.on("ready", function () {
-                        VSS.register("rollupboardwidget", () => {
-                            ff.LaunchDarklyService.setFlags();
-                            let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ff.LaunchDarklyService);
-                            return rollupboard;
+                VSS.getAppToken().then((Apptoken) => {
+                    WidgetHelpers.IncludeWidgetStyles();
+                    let webContext = VSS.getWebContext();
+                    console.log("token: "+Apptoken.token);
+                    console.log(webContext.user);
+                    var user = {
+                        "key": webContext.account.name + ":" + webContext.user.email,
+                        "email": webContext.user.email,
+                        "name": webContext.user.name + "-" + webContext.account.name,
+                        "custom": {
+                            "account": webContext.account.name
+                        }
+                    }
+                    ff.LaunchDarklyService.init(user, Apptoken.token, webContext.user.id).then((p) => {
+                        p.ldClient.on("ready", function () {
+                            VSS.register("rollupboardwidget", () => {
+                                ff.LaunchDarklyService.setFlags();
+                                let rollupboard = new app.WidgetRollUpBoard(WidgetHelpers, ff.LaunchDarklyService);
+                                return rollupboard;
+                            });
+                            VSS.notifyLoadSucceeded();
                         });
-                        VSS.notifyLoadSucceeded();
                     });
                 });
             });

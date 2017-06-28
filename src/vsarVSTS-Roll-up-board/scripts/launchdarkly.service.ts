@@ -4,7 +4,7 @@ export class LaunchDarklyService {
 
     // Private Settings to Tokenize
     private envId: string = "590348c958ed570a3af8a496";
-    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/GetHashKey?code=aqi3cVQPaTfQaT0dBaQoJ0k/LiVlZVmQU4FRHpgbKPHbHIuZ9y4eoA==";
+    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/CheckToken?code=j6uxjU509fiFhEcucgjb8EjiVzlZDUTJ49a4WDInvbqA4scw6Sj7lA==";
     private static UriUpdateFlagUser: string = "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==";
     // ----------------------------
     public ldClient: any;
@@ -14,11 +14,12 @@ export class LaunchDarklyService {
 
     constructor() { }
 
-    public static init(user: any): Promise<LaunchDarklyService> {
+    public static init(user: any, appToken: string, userid: string): Promise<LaunchDarklyService> {
+        console.log(userid);
         let deferred = Q.defer<LaunchDarklyService>();
         if (!this.instance) {
             this.instance = new LaunchDarklyService();
-            this.hashUserKey(user, true).then((h) => {
+            this.hashUserKey(user, true, appToken, userid).then((h) => {
                 this.instance.ldClient = LDClient.initialize(this.instance.envId, user, {
                     hash: h
                 });
@@ -45,16 +46,14 @@ export class LaunchDarklyService {
     public static trackEvent(event: string) {
         this.instance.ldClient.track(event);
     }
-    private static hashUserKey(user, hash: boolean): Promise<string> {
+    private static hashUserKey(user, hash: boolean, appToken: string, userid: string): Promise<string> {
         let deferred = Q.defer<string>();
         if (hash) {
             $.ajax({
                 url: this.UriHashKey,
-                contentType: "application/json; charset=UTF-8",
                 type: "POST",
-                dataType: "json",
                 headers: { "Access-Control-Allow-Origin": "*" },
-                data: "{'userkey':'" + user.key + "'}",
+                data: { userkey: "" + user.key + "", userid: "" + userid + "", token: "" + appToken + "" },
                 success: c => {
                     deferred.resolve(c);
                 }
