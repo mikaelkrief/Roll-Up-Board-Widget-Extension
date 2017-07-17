@@ -72,7 +72,7 @@
                     console.log("token: "+Apptoken.token);
                     console.log(webContext.user);
                     var user = {
-                        "key": webContext.account.name + ":" + webContext.user.email,
+                        "key": webContext.user.id + ":" + webContext.account.name,
                         "email": webContext.user.email,
                         "name": webContext.user.name + "-" + webContext.account.name,
                         "custom": {

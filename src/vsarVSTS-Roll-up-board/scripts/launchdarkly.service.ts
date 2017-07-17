@@ -4,7 +4,7 @@ export class LaunchDarklyService {
 
     // Private Settings to Tokenize
     private envId: string = "590348c958ed570a3af8a496";
-    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/CheckToken?code=j6uxjU509fiFhEcucgjb8EjiVzlZDUTJ49a4WDInvbqA4scw6Sj7lA==";
+    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/CheckToken?code=egRydmt17593a19FOfsAJN7ZYmBa3LY1DSTav/YOqPnBu9IBr19qcQ==";
     private static UriUpdateFlagUser: string = "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==";
     // ----------------------------
     public ldClient: any;
@@ -53,7 +53,7 @@ export class LaunchDarklyService {
                 url: this.UriHashKey,
                 type: "POST",
                 headers: { "Access-Control-Allow-Origin": "*" },
-                data: { userkey: "" + user.key + "", userid: "" + userid + "", token: "" + appToken + "" },
+                data: { account: "" + user.custom.account + "", token: "" + appToken + "" },
                 success: c => {
                     deferred.resolve(c);
                 }

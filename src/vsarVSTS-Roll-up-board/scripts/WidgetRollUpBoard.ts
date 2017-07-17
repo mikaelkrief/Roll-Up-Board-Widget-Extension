@@ -44,7 +44,7 @@ export class WidgetRollUpBoard {
         this.enableTelemetry = ldclientServices.flags["enable-telemetry"];
         this.displayLogs = ldclientServices.flags["display-logs"];
         this.LdclientServices = ldclientServices;
-
+        console.log(ldclientServices.flags);
         this.LdclientServices.trackEvent("enable-telemetry");
 
         if (this.enableTelemetry) {

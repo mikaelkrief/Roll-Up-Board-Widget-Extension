@@ -25,7 +25,7 @@
     "@types/jquery": "^2.0.34",
     "@types/q": "0.0.32",
     "applicationinsights-js": "*",
-    "ldclient-js": "^1.1.10",
+    "ldclient-js": "^1.1.12",
     "vss-web-extension-sdk": "^2.115.0",
     "telemetryclient-team-services-extension": "*"
   },
