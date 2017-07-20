@@ -4,7 +4,7 @@ export class LaunchDarklyService {
 
     // Private Settings to Tokenize
     private envId: string = "590348c958ed570a3af8a496";
-    private static UriHashKey: string = "https://vstsextcrypto.azurewebsites.net/api/CheckToken?code=egRydmt17593a19FOfsAJN7ZYmBa3LY1DSTav/YOqPnBu9IBr19qcQ==";
+    private static UriHashKey: string = "https://vsts-ext-feature-flags3-earlyadopters.azurewebsites.net/api/GetHashKey?code=9AORpUmdI4U7u1XUBiME6lHrDfp3Cl7qEg5ykR5Ko9C3IAXvx42QOQ==";
     private static UriUpdateFlagUser: string = "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==";
     // ----------------------------
     public ldClient: any;
