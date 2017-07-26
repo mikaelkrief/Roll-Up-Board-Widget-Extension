@@ -1,11 +1,12 @@
 import * as LDClient from "ldclient-js";
 import Q = require("q");
+let config = require("./appConfig.json");
 export class LaunchDarklyService {
 
     // Private Settings to Tokenize
-    private envId: string = "590348c958ed570a3af8a496";
-    private static UriHashKey: string = "https://vsts-ext-feature-flags3-earlyadopters.azurewebsites.net/api/GetHashKey?code=9AORpUmdI4U7u1XUBiME6lHrDfp3Cl7qEg5ykR5Ko9C3IAXvx42QOQ==";
-    private static UriUpdateFlagUser: string = "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw==";
+    private envId: string = config.LaunchDarkly.EnvId;
+    private static UriHashKey: string = config.LaunchDarkly.UriGetHashKey;
+    private static UriUpdateFlagUser: string = config.LaunchDarkly.UriUpdateFlagUser;
     // ----------------------------
     public ldClient: any;
     private static instance: LaunchDarklyService;
@@ -16,6 +17,7 @@ export class LaunchDarklyService {
 
     public static init(user: any, appToken: string, userid: string): Promise<LaunchDarklyService> {
         console.log(userid);
+
         let deferred = Q.defer<LaunchDarklyService>();
         if (!this.instance) {
             this.instance = new LaunchDarklyService();
@@ -28,6 +30,8 @@ export class LaunchDarklyService {
                     this.setFlags();
                 });
                 this.user = user;
+
+                console.log("envid: " + this.instance.envId);
 
                 deferred.resolve(this.instance);
             });

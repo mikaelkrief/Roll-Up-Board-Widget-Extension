@@ -56,23 +56,30 @@
                 setupModuleLoader: true
             });
 
-          
+
 
             VSS.ready(function () {
                 VSS.require(["dist/configuration", "TFS/Dashboards/WidgetHelpers", "../dist/LaunchDarklyService"], function (config, WidgetHelpers, ff) {
-                    let webContext = VSS.getWebContext();
-                    WidgetHelpers.IncludeWidgetConfigurationStyles();
-                    var user = {
-                        "key": webContext.account.name + ":" + webContext.user.email
-                    }
-                    ff.LaunchDarklyService.init(user).then((p) => {
-                        p.ldClient.on("ready", function () {
-                            VSS.register("rollupboardwidget-Configuration", () => {
-                                ff.LaunchDarklyService.setFlags();
-                                let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
-                                return configuration;
+                    VSS.getAppToken().then((Apptoken) => {
+                        WidgetHelpers.IncludeWidgetConfigurationStyles();
+                        let webContext = VSS.getWebContext();
+                        var user = {
+                            "key": webContext.user.id + ":" + webContext.account.name,
+                            "email": webContext.user.email,
+                            "name": webContext.user.name + "-" + webContext.account.name,
+                            "custom": {
+                                "account": webContext.account.name
+                            }
+                        }
+                        ff.LaunchDarklyService.init(user, Apptoken.token, webContext.user.id).then((p) => {
+                            p.ldClient.on("ready", function () {
+                                VSS.register("rollupboardwidget-Configuration", () => {
+                                    ff.LaunchDarklyService.setFlags();
+                                    let configuration = new config.Configuration(WidgetHelpers, ff.LaunchDarklyService);
+                                    return configuration;
+                                });
+                                VSS.notifyLoadSucceeded();
                             });
-                            VSS.notifyLoadSucceeded();
                         });
                     });
                 });

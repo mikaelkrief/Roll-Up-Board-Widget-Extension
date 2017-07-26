@@ -43,6 +43,10 @@ module.exports = {
             {
                 test: /\.s?css$/,
                 loaders: ["style", "css", "sass"]
+            },
+            {
+                test: /\.json?$/,
+                loader: "json-loader"
             }
         ]
     },

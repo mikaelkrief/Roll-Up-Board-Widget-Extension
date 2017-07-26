@@ -69,7 +69,7 @@
                 VSS.getAppToken().then((Apptoken) => {
                     WidgetHelpers.IncludeWidgetStyles();
                     let webContext = VSS.getWebContext();
-                    console.log("token: "+Apptoken.token);
+                    console.log(Apptoken);
                     console.log(webContext.user);
                     var user = {
                         "key": webContext.user.id + ":" + webContext.account.name,

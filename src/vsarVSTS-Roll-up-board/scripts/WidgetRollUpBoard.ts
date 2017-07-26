@@ -27,6 +27,7 @@ import telemetryClientSettings = require("./telemetryClientSettings");
 
 import * as ldservice from "./launchdarkly.service";
 
+let config = require("./appConfig.json");
 export class WidgetRollUpBoard {
 
     public client = RestClient.getClient();
@@ -52,6 +53,8 @@ export class WidgetRollUpBoard {
         } else {
             console.log("Application Insights Telemetry is Disabled");
         }
+
+        console.log(config);
 
     }
 
