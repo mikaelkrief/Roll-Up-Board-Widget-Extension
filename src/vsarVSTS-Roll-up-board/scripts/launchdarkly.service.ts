@@ -68,7 +68,7 @@ export class LaunchDarklyService {
         return deferred.promise;
     }
 
-    public static updateUserFeature(user, enable, feature/*, project, env*/): Promise<string> {
+    public static updateUserFeature(appToken: string, user, enable, feature/*, project, env*/): Promise<string> {
         let deferred = Q.defer<string>();
         if (user) {
             $.ajax({
@@ -77,7 +77,7 @@ export class LaunchDarklyService {
                 type: "POST",
                 dataType: "json",
                 headers: { "Access-Control-Allow-Origin": "*" },
-                data: "{'userkey':'" + user.key + "', 'active':" + enable + ", 'feature' : '" + feature + "' }",
+                data: { token: "" + appToken + "", active: "" + enable + "", feature: "" + feature + "", ldproject: "default", ldenv: "test", account: "" + user.custom.account + "" },
                 success: c => {
                     deferred.resolve(c);
                 }

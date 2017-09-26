@@ -8,7 +8,7 @@
     },
     "LaunchDarkly": {
         "EnvId": "590348c958ed570a3af8a496",
-        "UriGetHashKey": "https://vsts-ext-feature-flags3-earlyadopters.azurewebsites.net/api/GetHashKey?code=9AORpUmdI4U7u1XUBiME6lHrDfp3Cl7qEg5ykR5Ko9C3IAXvx42QOQ==",
-        "UriUpdateFlagUser": "https://vstsextcrypto.azurewebsites.net/api/UpdateUserFeature?code=erZlsJHBh9u/bwO1ZCO4czrvzqMA9XpUJjV6a9wHuMM1ajwprmcOKw=="
+        "UriGetHashKey": "https://vstsext-ff-dev.azurewebsites.net/api/GetHashKey",
+        "UriUpdateFlagUser": "https://vstsext-ff-dev.azurewebsites.net/api/UpdateUserFeatureFlag"
     }
 }

@@ -94,12 +94,14 @@ export class Configuration {
             _that.$enableff.change(() => {
                 let enabledFeature = _that.$enableff.is(":checked");
                 this.DisplayAreaPathDropdownClientSide(enabledFeature);
-                this.SetEnableFF(enabledFeature, "filter-areapath").then((e) => {
-                    if (e = "204") {
-                        this.LdclientServices.updateFlag("filter-areapath", enabledFeature);
-                        this.DisplayAreaPathDropdown();
-                        this.LdclientServices.trackEvent("filter-areapath");
-                    }
+                VSS.getAppToken().then((Apptoken) => {
+                    this.SetEnableFF(Apptoken.token, enabledFeature, "filter-areapath").then((e) => {
+                        if (e === "The flag is updated") {
+                            this.LdclientServices.updateFlag("filter-areapath", enabledFeature);
+                            this.DisplayAreaPathDropdown();
+                            this.LdclientServices.trackEvent("filter-areapath");
+                        }
+                    });
                 });
             });
 
@@ -129,9 +131,9 @@ export class Configuration {
 
         return deferred.promise;
     }
-    private SetEnableFF(enabled: boolean, feature: string): Promise<string> {
+    private SetEnableFF(token: string, enabled: boolean, feature: string): Promise<string> {
         let deferred = Q.defer<string>();
-        this.LdclientServices.updateUserFeature(this.LdclientServices.user, enabled, feature).then((r) => {
+        this.LdclientServices.updateUserFeature(token, this.LdclientServices.user, enabled, feature).then((r) => {
             console.log(r);
             deferred.resolve(r);
         });

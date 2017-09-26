@@ -9,14 +9,14 @@
     "clean-after-build": "rimraf ./scripts/telemetryclient.js && rimraf ./scripts/telemetryclient.d.ts",
     "lint": "tslint -c tslint.json \"scripts/*.ts",
     "webpack": "webpack --progress --colors --config webpack.config.js --output-path ./dist -p",
-    "copy-config" : "cpx scripts/appConfig.json dist"
+    "copy-config": "cpx scripts/appConfig.json dist"
   },
   "devDependencies": {
     "tfx-cli": "^0.4.5",
     "cpx": "^1.5.0",
     "jasmine": "^2.5.1",
     "rimraf": "^2.5.4",
-    "typescript": "^2.1.4",
+    "typescript": "2.3.4",
     "ts-loader": "^2.0.3",
     "tslint": "^4.3.1",
     "tslint-loader": "^3.3.0",
