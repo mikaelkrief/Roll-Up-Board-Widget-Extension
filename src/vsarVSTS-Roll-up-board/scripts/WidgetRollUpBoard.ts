@@ -681,7 +681,7 @@ VSS.ready(function () {
         WidgetHelpers.IncludeWidgetStyles();
         VSS.getAppToken().then((Apptoken) => {
             let webContext = VSS.getWebContext();
-            console.log(webContext);
+            // console.log(webContext);
             let user = {
                 "key": webContext.user.id + ":" + webContext.account.name,
                 "name": webContext.user.name,
