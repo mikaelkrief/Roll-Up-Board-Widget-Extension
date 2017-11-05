@@ -684,7 +684,7 @@ VSS.ready(function () {
             console.log(webContext);
             let user = {
                 "key": webContext.user.id + ":" + webContext.account.name,
-                "name": webContext.user.uniqueName + "-" + webContext.account.name,
+                "name": webContext.user.name,
                 "custom": {
                     "account": webContext.account.name
                 }
